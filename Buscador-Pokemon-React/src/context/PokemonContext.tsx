@@ -65,6 +65,14 @@ export const pokemonProvider : React.FC<{ children : React.ReactNode}> = ({ chil
         cargarMochilaEntrenador(usuario.id);
     }
 
+    const registrarEntrenador = (nuevoUsuario : usuario) => {
+        const actualizados = [...entrenadores, nuevoUsuario];
+        localStorage.setItem('lista_entrenadores', JSON.stringify(actualizados));
+        seleccionarEntrenador(nuevoUsuario);
+    }
+
+    const 
+
     
 
 }
