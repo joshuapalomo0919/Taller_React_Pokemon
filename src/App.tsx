@@ -1,12 +1,12 @@
-import {BrowserRouter, Routes, Route, NavLink, Navigate} from 'react-router-dom';
-import { pokemonProvider } from './context/pokemonContext';
-import { registroPokemon } from './components/RegistroUsuario';
-import { buscarPokemon } from './components/BuscarPokemon';
-import { inventarioPokemon } from './components/InventarioPokemon';
+import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { PokemonProvider } from './context/PokemonContext';
+import { RegistroPokemon } from './components/RegistroUsuario';
+import { BuscadorPokemon } from './components/BuscadorPokemon';
+import { InventarioPokemon } from './components/InventarioPokemon';
 
 function App() {
   return (
-    <pokemonProvider>
+    <PokemonProvider>
       <BrowserRouter>
         <header>
           <h1>Bienvenido al Portal Pokemon de entrenadores en react</h1>
@@ -21,14 +21,12 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/registro" replace />} />
             <Route path="/registro" element={<RegistroPokemon />} />
-            <Route path="/buscador" element={<buscarPokemon />} />
-            <Route path="/inventario" element={<inventarioPokemon />} />
+            <Route path="/buscador" element={<BuscadorPokemon />} />
+            <Route path="/inventario" element={<InventarioPokemon />} />
           </Routes>
         </main>
-
       </BrowserRouter>
-    </pokemonProvider>
- 
+    </PokemonProvider>
   );
 }
 
