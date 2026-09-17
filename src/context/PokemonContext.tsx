@@ -11,11 +11,11 @@ export interface usuario {
 }
 
 export interface PokemonTarjeta {
-    id: string;
+    id: number;
     name: string;
     image: string;
-    tupe: string;
-    baseExperiense: string;
+    type: string;
+    baseExperience: number;
     esFavorito: boolean;
 }
 
@@ -75,7 +75,7 @@ export const PokemonProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const actualizarPokemon = (pokemonId: number) => {
         if (!entrenadorActivo) return;
         const actualizada = mochilaActual.map((pokemon) =>
-            pokemon.id === pokemonId.toString() ? { ...pokemon, esFavorito: !pokemon.esFavorito } : pokemon
+            pokemon.id === pokemonId ? { ...pokemon, esFavorito: !pokemon.esFavorito } : pokemon
         );
         setMochilaActual(actualizada);
         localStorage.setItem(`mochila_${entrenadorActivo.id}`, JSON.stringify(actualizada));
@@ -83,7 +83,7 @@ export const PokemonProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const eliminarPokemon = (pokemonId: number) => {
         if (!entrenadorActivo) return;
-        const filtrado = mochilaActual.filter((pokemon) => pokemon.id !== pokemonId.toString());
+        const filtrado = mochilaActual.filter((pokemon) => pokemon.id !== pokemonId);
         setMochilaActual(filtrado);
         localStorage.setItem(`mochila_${entrenadorActivo.id}`, JSON.stringify(filtrado));
     };
