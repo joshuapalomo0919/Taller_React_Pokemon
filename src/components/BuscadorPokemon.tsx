@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePokemon, type PokemonTarjeta } from '../context/PokemonContext';
 
 export const BuscadorPokemon: React.FC = () => {
     const { entrenadorActivo, guardarPokemonMochila } = usePokemon();
+    const navigate = useNavigate();
     const [busqueda, setBusqueda] = useState('');
     const [pokemonActual, setPokemonActual] = useState<PokemonTarjeta | null>(null);
     const [mensajeError, setMensajeError] = useState<string | null>(null);
@@ -16,9 +18,15 @@ export const BuscadorPokemon: React.FC = () => {
 
         setCargando(true);
         setMensajeError(null);
+        setPokemonActual(null);
+
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 10000);
 
         try {
-            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`, {
+                signal: controller.signal,
+            });
             if (!res.ok) throw new Error('auxilio, socorro, no hay pokemon');
 
             const datos = await res.json();
@@ -31,9 +39,9 @@ export const BuscadorPokemon: React.FC = () => {
                 esFavorito: false
             });
         } catch (error: any) {
-            setPokemonActual(null);
-            setMensajeError(error.message);
+            setMensajeError(error.name === 'AbortError' ? 'La búsqueda tardó demasiado. Intenta de nuevo.' : error.message);
         } finally {
+            window.clearTimeout(timeoutId);
             setCargando(false);
         }
     };
@@ -51,6 +59,7 @@ export const BuscadorPokemon: React.FC = () => {
             // Limpieza del buscador para el quiz
             setBusqueda('');
             setPokemonActual(null);
+            navigate('/inventario');
         }
     };
 
@@ -65,13 +74,15 @@ export const BuscadorPokemon: React.FC = () => {
             </div>
 
             <form onSubmit={buscarPokemon}>
-                <div>
-                    <label>Buscar Pokemon</label>
+                        <div>
+                            <label htmlFor="busqueda-pokemon">Buscar Pokemon</label>
                     <input 
                         type="text" 
+                                id="busqueda-pokemon"
                         value={busqueda} 
                         onChange={(e) => setBusqueda(e.target.value)} 
                         placeholder='ej: Pikachu, charmander' 
+                                autoFocus
                     />
                 </div>
                 <button type='submit' disabled={cargando}>
